@@ -4,14 +4,14 @@ import Api from "../utils/api.js";
 
 const api = new Api("https://simple-blog-api-red.vercel.app");
 
-blogPostData.posts.forEach(async (post) => {
-  try {
-    await api.postPosts("/api/posts", post);
-    console.log("Post added successfully");
-  } catch (error) {
-    console.error("Error adding post:", error);
-  }
-});
+// blogPostData.posts.forEach(async (post) => {
+//   try {
+//     await api.postPosts("/api/posts", post);
+//     console.log("Post added successfully");
+//   } catch (error) {
+//     console.error("Error adding post:", error);
+//   }
+// });
 
 function createHomeHeader() {
   return UI.createElement(
