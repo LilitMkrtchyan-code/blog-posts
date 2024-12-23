@@ -129,7 +129,7 @@ function createPostCard(post) {
           UI.createElement(
             "img",
             {
-              src: "src/images/edit.png",
+              src: "images/edit.png",
               alt: "edit",
               class: "edit-icon",
               id: "edit-icon",
@@ -139,7 +139,7 @@ function createPostCard(post) {
           UI.createElement(
             "img",
             {
-              src: "src/images/delete.png",
+              src: "images/delete.png",
               alt: "delete",
               class: "delete-icon",
               id: "delete-icon",
