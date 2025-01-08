@@ -165,7 +165,7 @@ ul {
 .main-content .posts .post {
    max-width: 100%;
    font-family: var(--secondary-font-family);
-   border: 2px solid var(--color-grey-100);
+   border: 2px solid var(--color-blue-200);
    padding: var(--spacing-5);
    box-shadow: var(--box-shadow-3);
 }
@@ -220,14 +220,14 @@ ul {
    border-radius: var(--border-radius);
 }
 
-#user-name, 
+#user-email, 
 #user-password, 
 #first-name, 
 #last-name,
 #user-data,
 .post-form-title,
 .post-form-name,
-.post-form-image,
+.file-upload,
 .post-form-story,
 .reg-first-name,
 .reg-last-name,
@@ -236,21 +236,21 @@ ul {
 .reg-user-password {
    width: 100%;
    font-size: var(--font-size-2);
-   color: var(--color-grey-500);
+   color: var(--color-grey-600);
    padding: 8px var(--spacing-2);
    margin-bottom: var(--spacing-2);
    border-radius: var(--border-radius);
    border: 1px solid var(--color-grey-200);
 }
 
-#user-name:focus, 
+#user-email:focus, 
 #user-password:focus, 
 #first-name:focus, 
 #last-name:focus,
 #user-data:focus,
 .post-form-title:focus,
 .post-form-name:focus,
-.post-form-image:focus,
+.file-upload:focus,
 .post-form-story:focus,
 .reg-first-name:focus,
 .reg-last-name:focus,
@@ -289,17 +289,6 @@ ul {
 .form-wrapper .post-form .input-group,
 .form-wrapper .login-form .input-group {
    margin-bottom: var(--spacing-2);
-}
-
-.gender-selection .gender-block {
-   gap: var(--spacing-7);
-   margin: 
-   var(--spacing-3) 0 
-   var(--spacing-5);
-}
-
-.user-data-form .gender-option {
-   gap: 7px;
 }
 
 .form-wrapper .user-form-actions {
@@ -432,7 +421,7 @@ ul {
    .page .form-wrapper .user-data-form {
       width: 280px;
    }
-   #user-name, 
+   #user-email, 
    #user-password, 
    #first-name, 
    #last-name,

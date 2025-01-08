@@ -1,5 +1,7 @@
-import UI from "../utils/script.js";
-import ValidationError from "../utils/errors/validationError.js";
+import UI from "./utils/script.js";
+import ValidationError from "./utils/errors/validationError.js";
+import { api } from "./apis/api.js";
+import { Storage } from "./utils/storage.js";
 
 function createLoginHeader() {
   return UI.createElement(
@@ -20,7 +22,7 @@ function createLoginHeader() {
             UI.createElement(
               "a",
               {
-                href: "home.html",
+                href: "#",
                 class: "navigation-link f-w-500 t-center",
               },
               "Home"
@@ -55,17 +57,17 @@ function createLoginForm() {
       ),
       UI.createElement("div", { class: "input-group" }, [
         UI.createElement("input", {
-          id: "user-name",
+          id: "user-email",
           class: "w-100",
-          type: "text",
-          placeholder: "User name...",
+          type: "email",
+          placeholder: "email",
           required: "",
         }),
         UI.createElement("input", {
           id: "user-password",
           class: "w-100",
           type: "password",
-          placeholder: "Password...",
+          placeholder: "password",
           required: "",
         }),
       ]),
@@ -91,25 +93,36 @@ function createLoginLayout() {
 }
 createLoginLayout();
 
-function validateLoginForm(login, password) {
-  if (!login.includes("@")) {
+function validateLoginForm(credentials) {
+  if (!credentials.email.includes("@")) {
     throw new ValidationError("Invalid login");
   }
-  if (password.length < 8) {
+  if (credentials.password.length < 8) {
     throw new ValidationError("Password must be at least 8 characters long");
   }
   return true;
 }
 
-function login() {
+async function login() {
   try {
-    const inputLoginValue = document.querySelector("#user-name").value.trim();
-    const inputPassValue = document
-      .querySelector("#user-password")
-      .value.trim();
-    const isValid = validateLoginForm(inputLoginValue, inputPassValue);
+    const email = document.querySelector("#user-email").value.trim();
+    const password = document.querySelector("#user-password").value.trim();
+    const credentials = {
+      email,
+      password,
+    };
+    const isValid = validateLoginForm(credentials);
     if (isValid) {
-      window.location.href = "home.html";
+      const response = await api.auth.login(credentials);
+      console.log(response);
+      //{accessToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6Ik1WZGhIeVJYcEx4cWpTTz…sc2V9.KV-uRq8k_7_C-uGXEBkVTLkHvjUzuGEHXRBSBQUCmrk', user: {…}}
+      if (response.accessToken && response.user) {
+        Storage.setItem("token", response.accessToken);
+        Storage.setItem("user", response.user);
+        window.location.assign("home.html");
+      } else {
+        alert("Invalid email or password");
+      }
     }
   } catch (error) {
     if (error instanceof ValidationError) {

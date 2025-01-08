@@ -1,5 +1,6 @@
-import UI from "../utils/script.js";
-import ValidationError from "../utils/errors/validationError.js"
+import UI from "./utils/script.js";
+import ValidationError from "../scripts/utils/errors/validationError.js";
+import { api } from "./apis/api.js";
 
 function createRegistrationHeader() {
   return UI.createElement(
@@ -20,7 +21,7 @@ function createRegistrationHeader() {
             UI.createElement(
               "a",
               {
-                href: "home.html",
+                href: "#",
                 class: "navigation-link f-w-500 t-center",
               },
               "Home"
@@ -60,76 +61,46 @@ function createRegistrationForm() {
             type: "text",
             id: "reg-first-name",
             class: "reg-first-name w-100",
-            placeholder: "First Name",
+            placeholder: "first name",
           }),
           UI.createElement("input", {
             type: "text",
             id: "reg-last-name",
             class: "reg-last-name w-100",
-            placeholder: "Last Name",
-          }),
-          UI.createElement("input", {
-            type: "email",
-            id: "reg-user-email",
-            class: "reg-user-email w-100",
-            placeholder: "Email",
+            placeholder: "last name",
           }),
           UI.createElement("input", {
             type: "text",
             id: "reg-user-login",
             class: "reg-user-login w-100",
-            placeholder: "Username",
+            placeholder: "username",
+          }),
+          UI.createElement("input", {
+            type: "email",
+            id: "reg-user-email",
+            class: "reg-user-email w-100",
+            placeholder: "email",
           }),
           UI.createElement("input", {
             type: "password",
             id: "reg-user-password",
             class: "reg-user-password w-100",
-            placeholder: "Password",
+            placeholder: "password",
           }),
           UI.createElement(
             "div",
             {
-              class:
-                "gender-selection d-flex justify-content-between align-items-center",
+              class: "gender-selection d-flex justify-content-center",
             },
-            [
+            UI.createElement(
+              "div",
+              { class: "btn-content" },
               UI.createElement(
-                "div",
-                {
-                  class:
-                    "gender-block d-flex justify-content-between align-items-center",
-                },
-                [
-                  UI.createElement("div", { class: "gender-option" }, [
-                    UI.createElement("input", {
-                      type: "radio",
-                      id: "male",
-                      name: "gender",
-                      value: "male",
-                    }),
-                    UI.createElement("label", { for: "male" }, " Male"),
-                  ]),
-                  UI.createElement("div", { class: "gender-option" }, [
-                    UI.createElement("input", {
-                      type: "radio",
-                      id: "female",
-                      name: "gender",
-                      value: "female",
-                    }),
-                    UI.createElement("label", { for: "female" }, " Female"),
-                  ]),
-                ]
-              ),
-              UI.createElement(
-                "div",
-                { class: "btn-content" },
-                UI.createElement(
-                  "button",
-                  { class: "btn", type: "submit" },
-                  "Submit"
-                )
-              ),
-            ]
+                "button",
+                { class: "btn", type: "submit" },
+                "Submit"
+              )
+            )
           ),
         ]
       )
@@ -146,3 +117,83 @@ function createRegistrationLayout() {
 }
 createRegistrationLayout();
 
+function createNewUser() {
+  try {
+    const firstName = document.querySelector("#reg-first-name").value.trim();
+    const lastName = document.querySelector("#reg-last-name").value.trim();
+    const username = document.querySelector("#reg-user-login").value.trim();
+    const email = document.querySelector("#reg-user-email").value.trim();
+    const password = document.querySelector("#reg-user-password").value.trim();
+
+    const user = {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+    };
+    const isValid = validateForm(user);
+    if (!isValid) {
+      console.log("The entered data is invalid.");
+      return;
+    }
+    addUser(user);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      const errorMessage = document.querySelector("#error-message");
+
+      if (errorMessage) {
+        errorMessage.textContent = error.message;
+        errorMessage.classList.remove("d-none");
+      }
+    }
+  }
+}
+
+async function addUser(newUser) {
+  try {
+    const response = await api.auth.register(newUser);
+    console.log(response);
+    //{id: '5c7cae52-84ff-40b8-96c8-428a45e8b08a', created_at: '2025-01-05T12:01:50.230109+00:00', avatar: null, firstName: 'Kate', lastName: 'Doe', …}
+    if (response && response.id) {
+      console.log("User registered successfully!");
+      window.location.assign("index.html");
+    } else {
+      alert("Something is wrong, please check your details");
+    }
+  } catch (error) {
+    console.error("User registration failed:", error);
+    alert("Registration failed: " + error.message);
+  }
+}
+
+function validateForm(user) {
+  if (!user.firstName) {
+    throw new ValidationError("Invalid first name");
+  }
+  if (!user.lastName) {
+    throw new ValidationError("Invalid last name");
+  }
+  if (!user.email.includes("@")) {
+    throw new ValidationError("Invalid email address");
+  }
+  if (user.username.length < 8) {
+    throw new ValidationError("Username must be at least 8 characters");
+  }
+  if (user.password.length < 8) {
+    throw new ValidationError("Password must be at least 8 characters");
+  }
+  return true;
+}
+
+document
+  .querySelector("#reg-user-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    createNewUser();
+  });
+
+UI.clearErrorMessage();
+
+// kim_kardashian4455@gmail.com
+// 78962563#

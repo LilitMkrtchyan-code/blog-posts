@@ -1,4 +1,4 @@
-import UI from "./script.js";
+import UI from "./utils/script.js";
 
 const bloggers = [
   {

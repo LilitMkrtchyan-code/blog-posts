@@ -2,7 +2,7 @@ function checkIsValidElement(elem) {
    return elem instanceof Element;
  }
  
- const createElement = (element, attributes, children) => {
+ const createElement = (element, attributes, children = "") => {
    if (typeof element !== "string" || element.trim() === "") {
      throw new Error("Invalid element name");
    }

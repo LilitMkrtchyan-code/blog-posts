@@ -1,8 +1,9 @@
-import UI from "../utils/script.js";
-import ValidationError from "../utils/errors/validationError.js";
-import Api from "../utils/api.js";
+import UI from "./utils/script.js";
+import ValidationError from "./utils/errors/validationError.js";
+import { api } from "./apis/api.js";
 
-const api = new Api("https://simple-blog-api-red.vercel.app");
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get("postId");
 
 function createPostHeader() {
   return UI.createElement(
@@ -70,10 +71,9 @@ function createPostForm() {
               placeholder: "Author Name...",
             }),
             UI.createElement("input", {
-              id: "post-form-image",
-              class: "post-form-image input-field w-100",
-              type: "url",
-              placeholder: "Image Link...",
+              id: "file-upload",
+              class: "file-upload input-field w-100",
+              type: "file",
             }),
             UI.createElement("textarea", {
               id: "post-form-story",
@@ -88,8 +88,12 @@ function createPostForm() {
             { class: "btn-content post-btn t-center" },
             UI.createElement(
               "button",
-              { class: "btn f-w-500", type: "submit" },
-              "Create"
+              {
+                id: "post-button",
+                class: "post-button btn f-w-500",
+                type: "submit",
+              },
+              "Create Post"
             )
           ),
         ]
@@ -108,30 +112,31 @@ function createPostLayout() {
 createPostLayout();
 
 document
-  .querySelector("#post-form")
-  .addEventListener("submit", function (event) {
+  .querySelector("#post-button")
+  .addEventListener("click", function (event) {
     event.preventDefault();
     createNewPost();
   });
 
-function createNewPost() {
+async function createNewPost() {
   try {
     const title = document.querySelector("#post-form-title").value.trim();
     const story = document.querySelector("#post-form-story").value.trim();
     const authorName = document.querySelector("#post-form-name").value.trim();
-    const img = document.querySelector("#post-form-image").value.trim();
+    const fileUpload = document.querySelector("#file-upload");
+
+    const uploadedFile = await api.fileUpload.upload(fileUpload.files[0]);
 
     const post = {
       title,
       story,
       authorName,
-      img,
+      img: uploadedFile.url,
     };
     const isValid = validateForm(post);
     if (isValid) {
-      showAllPosts(post);
+      await addNewPost(post);
       UI.clearErrorMessage();
-      resetForm();
     }
   } catch (error) {
     if (error instanceof ValidationError) {
@@ -152,8 +157,10 @@ function validateForm(post) {
   if (!post.authorName) {
     throw new ValidationError("Invalid name");
   }
-  if (!UI.isValidUrl(post.img)) {
-    throw new ValidationError("Invalid URL");
+  if (!post.img) {
+    console.log(post.img);
+
+    throw new ValidationError("File not selected");
   }
   if (!post.story) {
     throw new ValidationError("Invalid story");
@@ -161,43 +168,40 @@ function validateForm(post) {
   return true;
 }
 
-// function showAllPosts(post) {
-//   const newPost = {
-//     id: UI.getUniqueId(),
-//     ...post,
-//   };
-//   api.postPosts("/api/posts", newPost)
-//   .then(response => {
-//     console.log("Post added successfully");
-//     setTimeout(() => {
-//       window.location.href = "home.html";
-//     }, 1000);
-//   })
-//   .catch(error => {
-//     console.log("Error: ", error);
-//   });
-// }
-
-async function showAllPosts(post) {
-  const newPost = {
-    id: UI.getUniqueId(),
-    ...post,
-  };
+async function addNewPost(post) {
   try {
-    const response = await api.postPosts("/api/posts", newPost);
-    console.log(response);
-    console.log("Post added successfully");
-    
-    setTimeout(() => {
-      window.location.href = "home.html";
-    }, 1000);
+    const newPost = {
+      id: UI.getUniqueId(),
+      ...post,
+    };
+    if (postId) {
+      const response = await api.post.update(postId, newPost);
+      console.log("Post added successfully");
+      window.location.assign("home.html");
+    } else {
+      const response = await api.post.create(newPost);
+      console.log("Post added successfully");
+      window.location.assign("home.html");
+    }
   } catch (error) {
-    console.log("Error: ", error);
+    console.log(error);
+    window.location.assign("home.html");
   }
 }
 
-function resetForm() {
-  document.querySelectorAll(".input-field").forEach((inputField) => {
-    inputField.value = "";
-  });
+async function getPost() {
+  try {
+    if (postId) {
+      document.querySelector("#post-button").textContent = "Update Post";
+      const post = await api.post.getPostById(postId);
+      document.querySelector("#post-form-title").value = post.title;
+      document.querySelector("#post-form-name").value = post.authorName;
+      document.querySelector("#post-form-story").value = post.story;
+      document.querySelector("#file-upload").value = post.img;
+    }
+  } catch (error) {
+    console.error("Error post:", error);
+    // window.location.assign("home.html");
+  }
 }
+getPost();

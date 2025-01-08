@@ -1,17 +1,7 @@
-import UI from "../utils/script.js";
-import blogPostData from "../utils/blogInfo.js";
-import Api from "../utils/api.js";
-
-const api = new Api("https://simple-blog-api-red.vercel.app");
-
-// blogPostData.posts.forEach(async (post) => {
-//   try {
-//     await api.postPosts("/api/posts", post);
-//     console.log("Post added successfully");
-//   } catch (error) {
-//     console.error("Error adding post:", error);
-//   }
-// });
+import UI from "./utils/script.js";
+import blogPostData from "./blogInfo.js";
+import { api } from "./apis/api.js";
+import { isUserLogin } from "./utils/is-user-login.js";
 
 function createHomeHeader() {
   return UI.createElement(
@@ -78,7 +68,9 @@ function createHomeNavbar() {
     UI.createElement(
       "ul",
       { class: "blogger-list" },
-      blogPostData.bloggers.map((blogger) => createBloggerCard(blogger))
+      api.user.getUser().then((bloggers) => {
+        bloggers.forEach((blogger) => createBloggerCard(blogger));
+      })
     )
   );
 }
@@ -178,7 +170,7 @@ function createHomeMain() {
                     "button",
                     {
                       class: "btn f-w-500",
-                      onclick: "window.location.href='createPost.html';",
+                      onclick: "window.location.href='post.html';",
                     },
                     "Create blog"
                   )
@@ -188,18 +180,7 @@ function createHomeMain() {
             UI.createElement(
               "section",
               { class: "posts d-flex", id: "posts" },
-              api
-                .getPosts("/api/posts")
-                .then((posts) => {
-                  const postsContainer = document.querySelector("#posts");
-                  posts.forEach((post) => {
-                    postsContainer.prepend(createPostCard(post));
-                  });
-                  console.log("Posts successfully retrieved from server");
-                })
-                .catch((error) => {
-                  console.error("Error retrieving data", error);
-                })
+              showPosts()
             ),
             createHomeFooter(),
           ]
@@ -225,29 +206,22 @@ function createHomeLayout() {
   UI.render(page, document.body);
 }
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   document.querySelector("#posts").addEventListener("click", function (event) {
-//     let postId = null;
-//     if (event.target.classList.contains("delete-icon")) {
-//       postId = event.target.closest(".post").dataset.id;
-
-//       api
-//         .deletePost(`/api/posts/${postId}`)
-//         .then(() => {
-//           console.log("Post deleted successfully");
-//           event.target.closest(".post").remove();
-//         })
-//         .catch((error) => {
-//           console.error("Error deleting post", error);
-//         });
-//     }
-//     if (event.target.classList.contains("edit-icon")) {
-//       postId = event.target.closest(".post").dataset.id;
-//       const postUrl = `updatePost.html?postId=${postId}`;
-//       window.location.href = postUrl;
-//     }
-//   });
-// });
+async function showPosts() {
+  try {
+    if (!isUserLogin()) {
+      window.location.assign("index.html");
+      return;
+    }
+    const posts = await api.post.getPosts();
+    const postsContainer = document.querySelector("#posts");
+    posts.forEach((post) => {
+      postsContainer.prepend(createPostCard(post));
+    });
+    console.log("Posts successfully retrieved from server");
+  } catch (error) {
+    console.error("Error retrieving data", error);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   document
@@ -257,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (event.target.classList.contains("delete-icon")) {
         postId = event.target.closest(".post").dataset.id;
         try {
-          await api.deletePost(`/api/posts/${postId}`);
+          await api.post.delete(postId);
           console.log("Post deleted successfully");
           event.target.closest(".post").remove();
         } catch (error) {
@@ -266,8 +240,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (event.target.classList.contains("edit-icon")) {
         postId = event.target.closest(".post").dataset.id;
-        const postUrl = `updatePost.html?postId=${postId}`;
-        window.location.href = postUrl;
+        const postUrl = `post.html?postId=${postId}`;
+        window.location.assign(postUrl);
       }
     });
 });
