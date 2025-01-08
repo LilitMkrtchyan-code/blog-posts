@@ -43,14 +43,14 @@ function createBloggerCard(blogger) {
   return UI.createElement(
     "li",
     {
-      class: "blogger-item d-flex justify-content-between align-items-center",
+      class: "blogger-item d-flex align-items-center",
       id: blogger.id,
     },
     [
       UI.createElement("img", {
         class: "avatar",
         src: blogger.avatar,
-        alt: `${blogger.firstName} ${blogger.lastName}`,
+        alt: ``,
       }),
       UI.createElement(
         "div",
@@ -67,10 +67,8 @@ function createHomeNavbar() {
     { class: "navbar h-100" },
     UI.createElement(
       "ul",
-      { class: "blogger-list" },
-      api.user.getUser().then((bloggers) => {
-        bloggers.forEach((blogger) => createBloggerCard(blogger));
-      })
+      { id: "blogger-list", class: "blogger-list" },
+      showAllUsers()
     )
   );
 }
@@ -220,6 +218,26 @@ async function showPosts() {
     console.log("Posts successfully retrieved from server");
   } catch (error) {
     console.error("Error retrieving data", error);
+  }
+}
+
+async function showAllUsers() {
+  try {
+    if (!isUserLogin()) {
+      window.location.assign("index.html");
+      return [];
+    }
+    const users = await api.user.getUser();
+    const bloggerList = document.querySelector("#blogger-list");
+    users.forEach((user) => {
+      const bloggerCard = createBloggerCard(user);
+      bloggerList.appendChild(bloggerCard);
+    });
+    console.log("Users successfully retrieved from server");
+    return users;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 }
 

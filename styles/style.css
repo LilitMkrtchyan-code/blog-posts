@@ -25,9 +25,10 @@ ul {
 
 .avatar {
    vertical-align: middle;
-   width: 50px;
-   height: 50px;
-   border-radius: 50%;
+   width: 70px;
+   height: 70px;
+   object-fit: cover;
+   /* border-radius: 50%; */
  }
 
  .btn-content .btn {
@@ -127,7 +128,7 @@ ul {
    border: 1px solid var(--color-white);
    padding: var(--spacing-2) var(--spacing-5);
    margin-bottom: 7px;
-   gap: var(--spacing-1);
+   gap: var(--spacing-2);
 }
 
 .navbar .blogger-item:last-child {
@@ -233,7 +234,8 @@ ul {
 .reg-last-name,
 .reg-user-email,
 .reg-user-login,
-.reg-user-password {
+.reg-user-password,
+.reg-image-upload {
    width: 100%;
    font-size: var(--font-size-2);
    color: var(--color-grey-600);
@@ -256,7 +258,8 @@ ul {
 .reg-last-name:focus,
 .reg-user-email:focus,
 .reg-user-login:focus,
-.reg-user-password:focus {
+.reg-user-password:focus,
+.reg-image-upload:focus {
    outline: 1px solid var(--color-blue-400);
 }
 

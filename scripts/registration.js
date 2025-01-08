@@ -87,6 +87,11 @@ function createRegistrationForm() {
             class: "reg-user-password w-100",
             placeholder: "password",
           }),
+          UI.createElement("input", {
+            id: "reg-image-upload",
+            class: "reg-image-upload w-100",
+            type: "file",
+          }),
           UI.createElement(
             "div",
             {
@@ -117,13 +122,17 @@ function createRegistrationLayout() {
 }
 createRegistrationLayout();
 
-function createNewUser() {
+async function createNewUser() {
   try {
     const firstName = document.querySelector("#reg-first-name").value.trim();
     const lastName = document.querySelector("#reg-last-name").value.trim();
     const username = document.querySelector("#reg-user-login").value.trim();
     const email = document.querySelector("#reg-user-email").value.trim();
     const password = document.querySelector("#reg-user-password").value.trim();
+    const userImageUpload = document.querySelector("#reg-image-upload");
+    console.log(userImageUpload);
+
+    const uploadedImage = await api.fileUpload.upload(userImageUpload.files[0]);
 
     const user = {
       firstName,
@@ -131,13 +140,14 @@ function createNewUser() {
       username,
       email,
       password,
+      avatar: uploadedImage.url,
     };
     const isValid = validateForm(user);
     if (!isValid) {
       console.log("The entered data is invalid.");
       return;
     }
-    addUser(user);
+    await addUser(user);
   } catch (error) {
     if (error instanceof ValidationError) {
       const errorMessage = document.querySelector("#error-message");
@@ -154,7 +164,6 @@ async function addUser(newUser) {
   try {
     const response = await api.auth.register(newUser);
     console.log(response);
-    //{id: '5c7cae52-84ff-40b8-96c8-428a45e8b08a', created_at: '2025-01-05T12:01:50.230109+00:00', avatar: null, firstName: 'Kate', lastName: 'Doe', …}
     if (response && response.id) {
       console.log("User registered successfully!");
       window.location.assign("index.html");
@@ -194,6 +203,3 @@ document
   });
 
 UI.clearErrorMessage();
-
-// kim_kardashian4455@gmail.com
-// 78962563#
