@@ -43,7 +43,7 @@ function createBloggerCard(blogger) {
   return UI.createElement(
     "li",
     {
-      class: "blogger-item d-flex align-items-center",
+      class: "blogger-item d-flex justify-content-center align-items-center",
       id: blogger.id,
     },
     [

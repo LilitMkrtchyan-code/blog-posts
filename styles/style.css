@@ -27,8 +27,8 @@ ul {
    vertical-align: middle;
    width: 70px;
    height: 70px;
+   border-radius: var(--border-radius);
    object-fit: cover;
-   /* border-radius: 50%; */
  }
 
  .btn-content .btn {
@@ -128,6 +128,7 @@ ul {
    border: 1px solid var(--color-white);
    padding: var(--spacing-2) var(--spacing-5);
    margin-bottom: 7px;
+   flex-direction: column;
    gap: var(--spacing-2);
 }
 
@@ -138,7 +139,7 @@ ul {
 .navbar .blogger-item .blogger-name {
    font-size: var(--font-size-2);
    font-family: var(--primary-font-family);
-   color: var(--color-grey-600);
+   color: var(--color-blue-800);
 }
 
 .main .main-content {
