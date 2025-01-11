@@ -7,6 +7,19 @@ function createHomeHeader() {
   const token = Storage.getItem("token");
   const isUserLogin = !!token;
 
+  const loginButton = UI.createElement(
+    "a",
+    { href: "index.html", class: "navigation-link f-w-500 t-center" },
+    isUserLogin ? "log Out" : "Log in"
+  );
+
+  loginButton.addEventListener('click', () => {
+    if (isUserLogin) {
+      Storage.clear();
+    }
+    window.location.assign("index.html");
+  });
+
   return UI.createElement(
     "header",
     { class: "header w-100" },
@@ -30,11 +43,7 @@ function createHomeHeader() {
               },
               "Sign Up"
             ),
-            UI.createElement(
-              "a",
-              { href: "index.html", class: "navigation-link f-w-500 t-center" },
-              isUserLogin ? "log Out" : "Log in"
-            ),
+            loginButton
           ]),
         ]
       )
