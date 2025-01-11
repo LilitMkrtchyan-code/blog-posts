@@ -1,56 +1,5 @@
 import UI from "./utils/script.js";
 
-const bloggers = [
-  {
-    id: 1,
-    firstName: "Alice",
-    lastName: "Johnson",
-    avatar: "https://www.w3schools.com/howto/img_avatar2.png",
-  },
-  {
-    id: 2,
-    firstName: "Bob",
-    lastName: "Smith",
-    avatar: "https://www.w3schools.com/w3images/avatar2.png",
-  },
-  {
-    id: 3,
-    firstName: "Monica",
-    lastName: "Brown",
-    avatar: "https://www.w3schools.com/w3images/avatar6.png",
-  },
-  {
-    id: 4,
-    firstName: "Emma",
-    lastName: "Doe",
-    avatar: "https://www.w3schools.com/howto/img_avatar2.png",
-  },
-  {
-    id: 5,
-    firstName: "Davit",
-    lastName: "Cooper",
-    avatar: "https://www.w3schools.com/w3images/avatar2.png",
-  },
-  {
-    id: 6,
-    firstName: "Monica",
-    lastName: "Brown",
-    avatar: "https://www.w3schools.com/w3images/avatar6.png",
-  },
-  {
-    id: 7,
-    firstName: "Emma",
-    lastName: "Armani",
-    avatar: "https://www.w3schools.com/howto/img_avatar2.png",
-  },
-  {
-    id: 8,
-    firstName: "Mike",
-    lastName: "James",
-    avatar: "https://www.w3schools.com/w3images/avatar2.png",
-  },
-];
-
 const posts = [
   {
     id: UI.getUniqueId(),
@@ -79,8 +28,7 @@ const posts = [
 ];
 
 const blogPostData = {
-  posts,
-  bloggers,
+  posts
 };
 
 export default blogPostData;

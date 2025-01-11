@@ -27,7 +27,7 @@ ul {
    vertical-align: middle;
    width: 70px;
    height: 70px;
-   border-radius: var(--border-radius);
+   border-radius: 50%;
    object-fit: cover;
  }
 
@@ -53,6 +53,7 @@ ul {
    max-width: 100%;
    width: 440px;
    height: 260px;
+   object-fit: cover;
  }
 
 .page {
@@ -86,6 +87,7 @@ ul {
 }
 
 .header-content .navigation-link {
+   font-family: var(--secondary-font-family);
    background: var(--color-blue-100);
    color: var(--color-blue-500);
    border: 2px solid var(--color-blue-400);
@@ -208,13 +210,13 @@ ul {
 .post .post-controls .delete-icon,
 .post .post-controls .edit-icon {
    cursor: pointer;
-   width: var(--spacing-5);
-   height: var(--spacing-5);
+   width: 28px;
+   height: 26px;
 }
 
 .main-content .footer {
    font-family: var(--primary-font-family);
-   background: var(--color-grey-600);
+   background: var(--color-blue-500);
    color:  var(--color-white);
    font-size: var(--font-size-1);
    letter-spacing: 2px;
@@ -229,7 +231,6 @@ ul {
 #user-data,
 .post-form-title,
 .post-form-name,
-.file-upload,
 .post-form-story,
 .reg-first-name,
 .reg-last-name,
@@ -253,7 +254,6 @@ ul {
 #user-data:focus,
 .post-form-title:focus,
 .post-form-name:focus,
-.file-upload:focus,
 .post-form-story:focus,
 .reg-first-name:focus,
 .reg-last-name:focus,
@@ -293,6 +293,13 @@ ul {
 .form-wrapper .post-form .input-group,
 .form-wrapper .login-form .input-group {
    margin-bottom: var(--spacing-2);
+}
+
+.post-form .input-group .post-img {
+   margin-top: var(--spacing-2);
+   width: 40%;
+   height: 120px;
+   object-fit: cover;
 }
 
 .form-wrapper .user-form-actions {

@@ -1,8 +1,12 @@
 import UI from "./utils/script.js";
 import ValidationError from "../scripts/utils/errors/validationError.js";
 import { api } from "./apis/api.js";
+import { Storage } from "./utils/storage.js";
 
 function createRegistrationHeader() {
+  const token = Storage.getItem("token");
+  const isUserLogin = !!token;
+
   return UI.createElement(
     "header",
     { class: "header" },
@@ -21,7 +25,7 @@ function createRegistrationHeader() {
             UI.createElement(
               "a",
               {
-                href: "#",
+                href: isUserLogin ? "home.html" : "#",
                 class: "navigation-link f-w-500 t-center",
               },
               "Home"
@@ -186,10 +190,10 @@ function validateForm(user) {
   if (!user.email.includes("@")) {
     throw new ValidationError("Invalid email address");
   }
-  if (user.username.length < 8) {
+  if (user.username.length < 6) {
     throw new ValidationError("Username must be at least 8 characters");
   }
-  if (user.password.length < 8) {
+  if (user.password.length < 6) {
     throw new ValidationError("Password must be at least 8 characters");
   }
   return true;
@@ -203,7 +207,6 @@ document
   });
 
 UI.clearErrorMessage();
-
 
 // bella_hadid8596@gmail.com
 // 4188963241A

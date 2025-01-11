@@ -1,9 +1,12 @@
 import UI from "./utils/script.js";
-import blogPostData from "./blogInfo.js";
 import { api } from "./apis/api.js";
 import { isUserLogin } from "./utils/is-user-login.js";
+import { Storage } from "./utils/storage.js";
 
 function createHomeHeader() {
+  const token = Storage.getItem("token");
+  const isUserLogin = !!token;
+
   return UI.createElement(
     "header",
     { class: "header w-100" },
@@ -30,7 +33,7 @@ function createHomeHeader() {
             UI.createElement(
               "a",
               { href: "index.html", class: "navigation-link f-w-500 t-center" },
-              "Log in"
+              isUserLogin ? "log Out" : "Log in"
             ),
           ]),
         ]
@@ -49,8 +52,8 @@ function createBloggerCard(blogger) {
     [
       UI.createElement("img", {
         class: "avatar",
-        src: blogger.avatar,
-        alt: ``,
+        src: blogger.avatar ? blogger.avatar : "../images/user.png",
+        alt: "user",
       }),
       UI.createElement(
         "div",
@@ -225,7 +228,7 @@ async function showAllUsers() {
   try {
     if (!isUserLogin()) {
       window.location.assign("index.html");
-      return [];
+      return;
     }
     const users = await api.user.getUser();
     const bloggerList = document.querySelector("#blogger-list");

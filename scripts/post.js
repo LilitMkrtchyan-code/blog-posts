@@ -70,17 +70,20 @@ function createPostForm() {
               type: "text",
               placeholder: "Author Name...",
             }),
-            UI.createElement("input", {
-              id: "file-upload",
-              class: "file-upload input-field w-100",
-              type: "file",
-            }),
             UI.createElement("textarea", {
               id: "post-form-story",
               class: "post-form-story input-field w-100",
               name: "post-form-story",
               rows: "6",
               placeholder: "Story...",
+            }),
+            UI.createElement("input", {
+              id: "file-upload",
+              class: "",
+              type: "file",
+            }),
+            UI.createElement("img", {
+              id: "post-img",
             }),
           ]),
           UI.createElement(
@@ -121,18 +124,24 @@ document
 async function createNewPost() {
   try {
     const title = document.querySelector("#post-form-title").value.trim();
-    const story = document.querySelector("#post-form-story").value.trim();
     const authorName = document.querySelector("#post-form-name").value.trim();
+    const story = document.querySelector("#post-form-story").value.trim();
     const fileUpload = document.querySelector("#file-upload");
 
-    const uploadedFile = await api.fileUpload.upload(fileUpload.files[0]);
+    let uploadedFile = null;
+    if (fileUpload.files.length > 0) {
+      uploadedFile = await api.fileUpload.upload(fileUpload.files[0]);
+    }
 
     const post = {
       title,
       story,
       authorName,
-      img: uploadedFile.url,
+      img: uploadedFile
+        ? uploadedFile.url
+        : document.querySelector("#post-img").src,
     };
+
     const isValid = validateForm(post);
     if (isValid) {
       await addNewPost(post);
@@ -158,9 +167,7 @@ function validateForm(post) {
     throw new ValidationError("Invalid name");
   }
   if (!post.img) {
-    console.log(post.img);
-
-    throw new ValidationError("File not selected");
+    throw new ValidationError("Please select a file to upload.");
   }
   if (!post.story) {
     throw new ValidationError("Invalid story");
@@ -171,20 +178,20 @@ function validateForm(post) {
 async function addNewPost(post) {
   try {
     const newPost = {
-      id: UI.getUniqueId(),
+      id: postId || UI.getUniqueId(),
       ...post,
     };
+    let response;
     if (postId) {
-      const response = await api.post.update(postId, newPost);
+      response = await api.post.update(postId, newPost);
       console.log("Post added successfully");
-      window.location.assign("home.html");
     } else {
-      const response = await api.post.create(newPost);
+      response = await api.post.create(newPost);
       console.log("Post added successfully");
-      window.location.assign("home.html");
     }
+    window.location.assign("home.html");
   } catch (error) {
-    console.log(error);
+    console.log("Error updating/creating post:", error);
     window.location.assign("home.html");
   }
 }
@@ -193,15 +200,15 @@ async function getPost() {
   try {
     if (postId) {
       document.querySelector("#post-button").textContent = "Update Post";
+      document.querySelector("#post-img").classList.add("post-img");
       const post = await api.post.getPostById(postId);
+      document.querySelector("#post-img").src = post.img ? post.img : "";
       document.querySelector("#post-form-title").value = post.title;
       document.querySelector("#post-form-name").value = post.authorName;
       document.querySelector("#post-form-story").value = post.story;
-      document.querySelector("#file-upload").value = post.img;
     }
   } catch (error) {
     console.error("Error post:", error);
-    // window.location.assign("home.html");
   }
 }
 getPost();
