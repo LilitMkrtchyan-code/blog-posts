@@ -11,7 +11,6 @@ export class AuthApi {
           "Content-Type": "application/json",
         },
       });
-      //Response {type: 'cors', url: 'https://simple-blog-api-red.vercel.app/api/auth/register', redirected: false, status: 201, ok: true, …}
       if (!response.ok) {
         const errorDetails = await response.json();
         throw new Error(errorDetails.message);

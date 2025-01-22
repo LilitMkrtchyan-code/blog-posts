@@ -7,4 +7,4 @@ export const isUserLogin = () => {
     return true;
   }
   return false;
-}
+};

@@ -79,7 +79,7 @@ function createPostForm() {
             }),
             UI.createElement("input", {
               id: "file-upload",
-              class: "",
+              class: "file-upload",
               type: "file",
             }),
             UI.createElement("img", {

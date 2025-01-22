@@ -13,7 +13,7 @@ function createHomeHeader() {
     isUserLogin ? "log Out" : "Log in"
   );
 
-  loginButton.addEventListener('click', () => {
+  loginButton.addEventListener("click", () => {
     if (isUserLogin) {
       Storage.clear();
     }
@@ -43,7 +43,7 @@ function createHomeHeader() {
               },
               "Sign Up"
             ),
-            loginButton
+            loginButton,
           ]),
         ]
       )

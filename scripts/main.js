@@ -100,8 +100,8 @@ function validateLoginForm(credentials) {
   if (!credentials.email.includes("@")) {
     throw new ValidationError("Invalid login");
   }
-  if (credentials.password.length < 8) {
-    throw new ValidationError("Password must be at least 8 characters long");
+  if (credentials.password.length < 6) {
+    throw new ValidationError("Password must be at least 6 characters long");
   }
   return true;
 }
@@ -118,7 +118,6 @@ async function login() {
     if (isValid) {
       const response = await api.auth.login(credentials);
       console.log(response);
-      //{accessToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6Ik1WZGhIeVJYcEx4cWpTTz…sc2V9.KV-uRq8k_7_C-uGXEBkVTLkHvjUzuGEHXRBSBQUCmrk', user: {…}}
       if (response.accessToken && response.user) {
         Storage.setItem("token", response.accessToken);
         Storage.setItem("user", response.user);
