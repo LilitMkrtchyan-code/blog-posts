@@ -27,7 +27,7 @@ ul {
   vertical-align: middle;
   width: 70px;
   height: 70px;
-  border-radius: 50%;
+  border-radius: 8px;
   object-fit: cover;
 }
 
