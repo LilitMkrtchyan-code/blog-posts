@@ -191,10 +191,10 @@ function validateForm(user) {
     throw new ValidationError("Invalid email address");
   }
   if (user.username.length < 6) {
-    throw new ValidationError("Username must be at least 8 characters");
+    throw new ValidationError("Username must be at least 6 characters");
   }
   if (user.password.length < 6) {
-    throw new ValidationError("Password must be at least 8 characters");
+    throw new ValidationError("Password must be at least 6 characters");
   }
   return true;
 }
@@ -207,6 +207,3 @@ document
   });
 
 UI.clearErrorMessage();
-
-// bella_hadid8596@gmail.com
-// 4188963241A
