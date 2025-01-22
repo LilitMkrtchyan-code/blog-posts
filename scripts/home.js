@@ -61,7 +61,7 @@ function createBloggerCard(blogger) {
     [
       UI.createElement("img", {
         class: "avatar",
-        src: blogger.avatar ? blogger.avatar : "../images/user.png",
+        src: blogger.avatar ? blogger.avatar : "/images/user.png",
         alt: "user",
       }),
       UI.createElement(
