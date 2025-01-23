@@ -140,6 +140,7 @@ ul {
 }
 
 .navbar .blogger-item .blogger-name {
+  text-align: center;
   font-size: var(--font-size-2);
   font-family: var(--primary-font-family);
   color: var(--color-blue-800);
