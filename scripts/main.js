@@ -4,9 +4,6 @@ import { api } from "./apis/api.js";
 import { Storage } from "./utils/storage.js";
 
 function createLoginHeader() {
-  const token = Storage.getItem("token");
-  const isUserLogin = !!token;
-
   return UI.createElement(
     "header",
     { class: "header" },
@@ -25,7 +22,7 @@ function createLoginHeader() {
             UI.createElement(
               "a",
               {
-                href: isUserLogin ? "home.html" : "#",
+                href: "home.html",
                 class: "navigation-link f-w-500 t-center",
               },
               "Home"

@@ -3,23 +3,25 @@ import { api } from "./apis/api.js";
 import { isUserLogin } from "./utils/is-user-login.js";
 import { Storage } from "./utils/storage.js";
 
-function createHomeHeader() {
-  const token = Storage.getItem("token");
-  const isUserLogin = !!token;
+const isUserLogged = isUserLogin();
 
+function createLoginButton() {
   const loginButton = UI.createElement(
     "a",
     { href: "index.html", class: "navigation-link f-w-500 t-center" },
-    isUserLogin ? "log Out" : "Log in"
+    isUserLogged ? "log Out" : "Log in"
   );
 
   loginButton.addEventListener("click", () => {
-    if (isUserLogin) {
+    if (isUserLogged) {
       Storage.clear();
     }
     window.location.assign("index.html");
   });
+  return loginButton;
+}
 
+function createHomeHeader() {
   return UI.createElement(
     "header",
     { class: "header w-100" },
@@ -43,7 +45,7 @@ function createHomeHeader() {
               },
               "Sign Up"
             ),
-            loginButton,
+            createLoginButton(),
           ]),
         ]
       )
@@ -180,7 +182,9 @@ function createHomeMain() {
                     "button",
                     {
                       class: "btn f-w-500",
-                      onclick: "window.location.href='post.html';",
+                      onclick: isUserLogged
+                        ? "window.location.href='post.html'"
+                        : "window.location.href='index.html'",
                     },
                     "Create blog"
                   )
@@ -218,10 +222,6 @@ function createHomeLayout() {
 
 async function showPosts() {
   try {
-    if (!isUserLogin()) {
-      window.location.assign("index.html");
-      return;
-    }
     const posts = await api.post.getPosts();
     const postsContainer = document.querySelector("#posts");
     posts.forEach((post) => {
@@ -235,10 +235,6 @@ async function showPosts() {
 
 async function showAllUsers() {
   try {
-    if (!isUserLogin()) {
-      window.location.assign("index.html");
-      return;
-    }
     const users = await api.user.getUser();
     const bloggerList = document.querySelector("#blogger-list");
     users.forEach((user) => {
@@ -257,6 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .querySelector("#posts")
     .addEventListener("click", async function (event) {
+      if (!isUserLogged) {
+        window.location.assign("index.html");
+        return;
+      }
       let postId = null;
       if (event.target.classList.contains("delete-icon")) {
         postId = event.target.closest(".post").dataset.id;

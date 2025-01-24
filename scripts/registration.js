@@ -1,12 +1,8 @@
 import UI from "./utils/script.js";
 import ValidationError from "../scripts/utils/errors/validationError.js";
 import { api } from "./apis/api.js";
-import { Storage } from "./utils/storage.js";
 
 function createRegistrationHeader() {
-  const token = Storage.getItem("token");
-  const isUserLogin = !!token;
-
   return UI.createElement(
     "header",
     { class: "header" },
@@ -25,7 +21,7 @@ function createRegistrationHeader() {
             UI.createElement(
               "a",
               {
-                href: isUserLogin ? "home.html" : "#",
+                href: "home.html",
                 class: "navigation-link f-w-500 t-center",
               },
               "Home"
